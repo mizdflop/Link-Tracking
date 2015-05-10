@@ -1,0 +1,79 @@
+<template name="showResults">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-xs-4">
+				<form class="form-inline">
+					<div class="form-group">
+
+						<h4>Select Sites:</h4>							
+						{{#each sites}}
+							<div class="checkbox">
+								{{#if isChecked}}
+									<input type="checkbox" value="{{siteName}}" class="selectSite" checked> &nbsp;{{siteName}}
+								{{else}}
+									<input type="checkbox" value="{{siteName}}" class="selectSite"> &nbsp;{{siteName}}
+								{{/if}}
+							</div>
+						{{/each}}
+						<br><br>
+						Show: <select id="limitSelector">
+							{{#each limitOptions}}
+								{{#if isSelected}}
+									<option value="{{this}}" selected>{{this}}</option>
+								{{else}}
+									<option value="{{this}}">{{this}}</option>
+								{{/if}}
+
+							{{/each}}
+						</select>
+					</div>
+				</form>
+			</div>
+			<div class="col-xs-8">
+
+						<h4>Sort by:</h4>
+						Percentage gain over how many minutes: <input type="text" width="25px" id="pgaintime" value="{{pgaintime}}"><br>
+						With at least how many likes: <input type="text" width="25px" id="minlikes" value="{{minlikes}}"><br>
+						<button id="setTheSlope">submit</button>
+			</div>
+		</div>
+		<div class="row form-space-top">	
+				<div class="col-xs-8">
+
+					How many minutes should be represented in each graph? 
+					<br><input type="text" width="25px" id="graphminutes" value="{{graphminutes}}"> &nbsp;
+					<button id="setGraphTime">submit</button>
+				</div>
+
+
+		</div>
+		<div class="row">
+			{{#if offset}}
+			<div class="col-xs-4 article-data">
+				<a class="prev-link">  Prev {{limit}} </a>
+			</div>
+
+			{{/if}}
+
+			{{#each articles}}
+				<div class="col-xs-4">
+					<div class="article-data">
+						<h4 class="tile-title">{{title}}</h4>
+						<p>From: <a href="{{linkCanonical}}" target="_blank">{{siteName}}</a> &nbsp;&nbsp;&nbsp;Current Like Count: {{numberLikes}}<br>
+						{{#if watched}}
+							Item <em>watched</em> (<a class="remove-watch">remove watch</a>)
+						{{else}}
+							<a class="watch-item">Watch item</a>
+						{{/if}}
+						</p>
+						<div id="{{divId}}" class="graphholder"></div>
+					</div>
+				</div>
+			{{/each}}
+			<div class="col-xs-4 article-data">
+				<a class="next-link">Next {{limit}} >></a>
+			</div>
+
+		</div>
+	</div>
+</template>

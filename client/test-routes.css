@@ -1,0 +1,26 @@
+/* CSS declarations go here */
+.form-space-top{
+	margin-top: 12px;
+}
+.article-data{
+	border: solid;
+	border-width: 1px;
+	padding: 20px;
+	height: 400px;
+	margin-top: 10px;
+}
+.tile-title{
+
+}
+.graphholder{
+	text-align: center;
+	line-height: 75px;
+}
+.next-link, .prev-link{
+	margin-top: 65px;
+	padding: 75px;
+	font-size: 30px;
+	font-weight: bold;
+	cursor: pointer;
+	cursor: hand;
+}
