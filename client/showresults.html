@@ -59,12 +59,13 @@
 				<div class="col-xs-4">
 					<div class="article-data">
 						<h4 class="tile-title">{{title}}</h4>
-						<p>From: <a href="{{linkCanonical}}" target="_blank">{{siteName}}</a> &nbsp;&nbsp;&nbsp;Current Like Count: {{numberLikes}}<br>
+						<p>From: <a href="{{linkCanonical}}" target="_blank">{{siteName}}</a> &nbsp;&nbsp;&nbsp;Like Count: {{numberLikes}}<br>
 						{{#if watched}}
 							Item <em>watched</em> (<a class="remove-watch">remove watch</a>)
 						{{else}}
 							<a class="watch-item">Watch item</a>
 						{{/if}}
+						 <br>Published: {{trackingStart}}
 						</p>
 						<div id="{{divId}}" class="graphholder"></div>
 					</div>

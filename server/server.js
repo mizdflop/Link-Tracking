@@ -22,6 +22,7 @@ function getFullArticleMeta ( url, siteName ){
 function faceBookOpenGraphCall ( url ){
 	var fbAPI = "http://api.facebook.com/method/links.getStats";
 	var obj = Articles.find( { url: url }).fetch();
+	if (ob.timestamp < Date.now() - (48 * 60 * 60 * 1000) ) { return ; }
 	var linkCanonical = obj[0].linkCanonical;
 	result = HTTP.call ("GET", fbAPI, {params: {urls: url, format: "json"}});
 	var likeCount = result.data[0].like_count;  
@@ -64,7 +65,7 @@ function startScraping() {
 Meteor.publish('getArticles', function( starttime, endtime, sites){
 	return Articles.find(
 	{
-		timestamp: { $gt: parseInt(starttime) },
+		timestamp: { $gt: Date.now() - (48 * 60 * 60 * 1000) },
 		timestamp: { $lt: parseInt(endtime) },
 		//siteName: { $in: sites }
 	});

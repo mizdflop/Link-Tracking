@@ -109,6 +109,10 @@ Template.showResults.helpers({
   },
   offset: function(){
     return parseInt(Router.current().params.offset); 
+  },
+  trackingStart: function(){
+    return moment(this.timestamp).format("dddd, MMMM Do, h:mm a");
+
   }  
 });
 
