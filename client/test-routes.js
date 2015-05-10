@@ -20,7 +20,6 @@ function initGraph( article ){
   var ticks = ['x'];
   var likes = ['likes'];
 
-
   //get dates and data points into arrays c3 is expecting
   var numberElements = Math.floor( Session.get("graphminutes") / intervalTime );
   for( var i = article.fbData.length-numberElements; i < article.fbData.length; i++){
@@ -38,18 +37,13 @@ function initGraph( article ){
       likes.push ( article.fbData[i].likeCount ) ; 
     }
   }
-
-
-
  //graph has been made and it's on the page
   if ( articleObj[article._id] && articleObj[article._id].graphed && $(str).length == undefined ){
    articleObj[article._id].chart.load({
       columns: [ likes ] 
     });
    return;
-  }
-    
-  
+  }  
   //first time we're making this graph.
   articleObj[article._id] = article;
   articleObj[article._id].chart = c3.generate({
@@ -76,7 +70,6 @@ function initGraph( article ){
     });
      //end chart
     articleObj[article._id].graphed = true;
-
 }
 
 Template.showResults.helpers({
@@ -108,11 +101,11 @@ Template.showResults.helpers({
     return Router.current().params.limit;    
   },  
   numberLikes: function(){
+    var returnStr = "n/a";
     if ( this.fbData.length ){
-      return _.last(this.fbData).likeCount
-    } else {
-      return "N/A";
+      returnStr = _.last(this.fbData).likeCount
     }
+    return returnStr;
   },
   offset: function(){
     return parseInt(Router.current().params.offset); 
@@ -127,39 +120,23 @@ Template.showResults.events({
     } else {
       Router.query.remove('sites', currentElemnt);
     }
-
   },
   'change #limitSelector': function(elem) {
-    var limit = $( elem.target ).val();
-    changeRoute(
-      {limit: limit}
-    );
-
+    changeRoute( {limit: $( elem.target ).val()} );
   },
   'click #setTheSlope': function() {
-    changeRoute(
-      {pgaintime: $('#pgaintime').val(), minlikes: $('#minlikes').val() }
-    );
-
+    changeRoute( {pgaintime: $('#pgaintime').val(), minlikes: $('#minlikes').val() });
   },
   'click #setGraphTime': function() {
-    changeRoute(
-     { graphminutes: $('#graphminutes').val() }
-    );
+    changeRoute( { graphminutes: $('#graphminutes').val() });
   },
   'click .next-link': function(){
     var newoffset = parseInt(Router.current().params.offset) + parseInt(Router.current().params.limit);    
-    changeRoute(
-     { offset: newoffset }
-    );
-
+    changeRoute( { offset: newoffset }  );
   },
   'click .prev-link': function(){
     var newoffset = parseInt(Router.current().params.offset) - parseInt(Router.current().params.limit);
-    changeRoute(
-     { offset: newoffset }
-    );
-
+    changeRoute( { offset: newoffset });
   },
   'click .watch-item': function(){
     Meteor.call('addWatcher', this._id);
@@ -167,7 +144,6 @@ Template.showResults.events({
   'click .remove-watch': function(){
     Meteor.call('removeWatcher', this._id);
   }
-  
 });
 Template.showResults.onRendered( function(){
     this.autorun( function(){
