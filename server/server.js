@@ -22,13 +22,16 @@ function getFullArticleMeta ( url, siteName ){
 function faceBookOpenGraphCall ( url ){
 	var fbAPI = "http://api.facebook.com/method/links.getStats";
 	var obj = Articles.find( { url: url }).fetch();
-	if (ob.timestamp < Date.now() - (48 * 60 * 60 * 1000) ) { return ; }
-	var linkCanonical = obj[0].linkCanonical;
+	if (obj.timestamp < Date.now() - (48 * 60 * 60 * 1000) ) { return ; }
+	if( !obj[0].linkCanonical ) { console.log ("oops"); return; }
 	result = HTTP.call ("GET", fbAPI, {params: {urls: url, format: "json"}});
+	if (result.error){
+		console.log(result.error);
+	}
 	var likeCount = result.data[0].like_count;  
 	var shareCount = result.data[0].share_count; 
 	Articles.update(
-		{ linkCanonical: linkCanonical},
+		{ linkCanonical: obj[0].linkCanonical},
 		{ 
 			$push: { fbData: 
 				{
@@ -50,35 +53,43 @@ function startScraping() {
 		$ = Cheerio.load(result.content, {xmlMode: true});
 		$('item').each(function(i, elem){
 			var url = $(this).find('link').text();
-			console.log (url );
-			console.log (  Articles.find({url: url }).count() );
-			if ( Articles.find({url: url }).count()==0){
-				getFullArticleMeta( url, site.siteName );
-			} else {
-				faceBookOpenGraphCall ( url );
+			//console.log (url );
+			if ( url.match(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/ ) ){
+				//console.log (  Articles.find({url: url }).count() );
+				if ( Articles.find({url: url }).count()==0){
+					getFullArticleMeta( url, site.siteName );
+				} else {
+					faceBookOpenGraphCall ( url );
+				}
 			}
 		});
 	});
 }
 
 
-Meteor.publish('getArticles', function( starttime, endtime, sites){
+Meteor.publish('getArticles', function( hoursago, endtime, sites){
 	return Articles.find(
 	{
-		timestamp: { $gt: Date.now() - (48 * 60 * 60 * 1000) },
-		timestamp: { $lt: parseInt(endtime) },
+		timestamp: { $gt: Date.now() - (parseInt(hoursago) * 60 * 60 * 1000) },
+		//timestamp: { $lt: parseInt(endtime) },
 		//siteName: { $in: sites }
-	});
+	}
+	);
 });
 Meteor.publish('allSites', function(){
 	return Sites.find();
 });
 
 Meteor.methods({
-	addWatcher: function(id){
-
+	addSite: function(siteName, rssFeed){
+		Sites.insert({
+			siteName: siteName,
+			rssFeed: rssFeed
+		});
 	},
-	removeWatcher: function(id){
+	removeSite: function(id){
+		Sites.remove({_id: id});
+
 
 	}
 });

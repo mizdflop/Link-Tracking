@@ -79,8 +79,14 @@ Template.showResults.helpers({
   limitOptions: function(){
     return ["5", "10", "25", "50"];
   },
+  hoursAgoOptions: function(){
+    return ["1", "2", "3", "4", "5", "8", "12", "24", "48", "72"];
+  },
   isSelected: function(){
     return parseInt(Router.current().params.limit) == parseInt(this.valueOf()) ? true : false ;
+  },
+  isSelectedHoursAgo: function(){
+    return parseInt(Router.current().params.hoursago) == parseInt(this.valueOf()) ? true : false ;
   },
   divId: function(){
     return "a" + this._id;
@@ -128,6 +134,10 @@ Template.showResults.events({
   'change #limitSelector': function(elem) {
     changeRoute( {limit: $( elem.target ).val()} );
   },
+  'change #hoursAgo': function(elem) {
+    changeRoute( {hoursago: $( elem.target ).val()} );
+  },
+
   'click #setTheSlope': function() {
     changeRoute( {pgaintime: $('#pgaintime').val(), minlikes: $('#minlikes').val() });
   },

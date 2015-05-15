@@ -1,0 +1,14 @@
+<template name="addRemoveSite">
+
+Add site RSS Feed:
+Site Name: <input type="text" id="siteName"><br>
+RSS Feed Link: <input type="text" id="rssFeed">
+<button id="addSite">Add the Site</button>
+
+<br><br>
+
+<h4>Remove a site and all assoicated article by clicking the X next to the site name. There's no going back. </h4>
+{{#each sites}}
+	{{siteName}} <a class="removeSite">X</a><br>
+{{/each}}
+</template>

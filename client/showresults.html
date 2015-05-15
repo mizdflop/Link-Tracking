@@ -26,6 +26,21 @@
 
 							{{/each}}
 						</select>
+						<br>
+						Articles pub within how many hours: 
+						<select id="hoursAgo">
+							{{#each hoursAgoOptions}}
+								{{#if isSelectedHoursAgo}}
+									<option value="{{this}}" selected>{{this}}</option>
+								{{else}}
+									<option value="{{this}}">{{this}}</option>
+								{{/if}}
+
+							{{/each}}
+
+
+
+						</select>
 					</div>
 				</form>
 			</div>
