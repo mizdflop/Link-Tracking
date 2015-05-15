@@ -65,6 +65,11 @@ function initGraph( article ){
        x: { 
           label: "Likes, Last 20 minutes", 
           position: "inner-center"
+       },
+       y: {
+        tick: {
+          format: function (d) {  return d; }
+        }
        }
       }
     });
@@ -109,7 +114,7 @@ Template.showResults.helpers({
   numberLikes: function(){
     var returnStr = "n/a";
     if ( this.fbData.length ){
-      returnStr = _.last(this.fbData).likeCount
+      returnStr = _.last(this.fbData).likeCount;
     }
     return returnStr;
   },

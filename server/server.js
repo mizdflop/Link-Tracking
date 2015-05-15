@@ -5,7 +5,8 @@ var Cheerio = Meteor.npmRequire('cheerio');
 
 function getFullArticleMeta ( url, siteName ){
 	var obj = {};
-	var result = HTTP.call( "GET", url );
+	if( !url ) { return; }
+	var result = HTTP.call( "GET", url.trim() );
 	$ = Cheerio.load(result.content);
 	obj.siteName = siteName;
 	obj.url = url;
@@ -24,6 +25,7 @@ function faceBookOpenGraphCall ( url ){
 	var obj = Articles.find( { url: url }).fetch();
 	if (obj.timestamp < Date.now() - (48 * 60 * 60 * 1000) ) { return ; }
 	if( !obj[0].linkCanonical ) { console.log ("oops"); return; }
+	//console.log (fbAPI);
 	result = HTTP.call ("GET", fbAPI, {params: {urls: url, format: "json"}});
 	if (result.error){
 		console.log(result.error);
@@ -49,20 +51,17 @@ function faceBookOpenGraphCall ( url ){
 
 function startScraping() {
 	_.each (Sites.find().fetch(), function( site ) {
+		console.log (site.rssFeed);
 		var result = HTTP.call( "GET", site.rssFeed );
 		$ = Cheerio.load(result.content, {xmlMode: true});
 		$('item').each(function(i, elem){
 			var url = $(this).find('link').text();
-			//console.log (url );
-			if ( url.match(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/ ) ){
-				//console.log (  Articles.find({url: url }).count() );
-				if ( Articles.find({url: url }).count()==0){
-					getFullArticleMeta( url, site.siteName );
-				} else {
-					faceBookOpenGraphCall ( url );
-				}
+			if ( Articles.find({url: url }).count()==0){
+				getFullArticleMeta( url, site.siteName );
+			} else {
+				faceBookOpenGraphCall ( url );
 			}
-		});
+		})
 	});
 }
 
